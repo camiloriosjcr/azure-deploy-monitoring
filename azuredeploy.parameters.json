@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": { "value": "UbuntuMonitorVM" },
+    "adminUsername": { "value": "adminuser" },
+    "adminPassword": { "value": "TuContraseñaSegura" },
+    "vmSize": { "value": "Standard_D2s_v3" },
+    "osDiskSizeGB": { "value": 30 },
+    "subnetId": { "value": "/subscriptions/TU-SUBSCRIPTION-ID/resourceGroups/TU-GRUPO-DE-RECURSOS/providers/Microsoft.Network/virtualNetworks/TU-VNET/subnets/TU-SUBNET" }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "defaultValue": "UbuntuMonitorVM",
+      "metadata": {
+        "description": "Nombre de la máquina virtual"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Nombre de usuario administrador de la VM"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Contraseña para el usuario administrador"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_D2s_v3",
+      "allowedValues": [
+        "Standard_B2ms",
+        "Standard_D2s_v3",
+        "Standard_D4s_v3"
+      ],
+      "metadata": {
+        "description": "Tamaño de la VM"
+      }
+    },
+    "osDiskSizeGB": {
+      "type": "int",
+      "defaultValue": 30,
+      "metadata": {
+        "description": "Tamaño del disco del sistema operativo"
+      }
+    },
+    "networkInterfaceName": {
+      "type": "string",
+      "defaultValue": "ubuntuMonitorNIC",
+      "metadata": {
+        "description": "Nombre de la interfaz de red"
+      }
+    },
+    "subnetId": {
+      "type": "string",
+      "metadata": {
+        "description": "ID de la subred donde se desplegará la VM"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2021-05-01",
+      "name": "UbuntuMonitorNSG",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowSSH",
+            "properties": {
+              "priority": 1001,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
+            }
+          },
+          {
+            "name": "AllowGrafana",
+            "properties": {
+              "priority": 1002,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3000"
+            }
+          },
+          {
+            "name": "AllowPrometheus",
+            "properties": {
+              "priority": 1003,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "9090"
+            }
+          },
+          {
+            "name": "AllowLoki",
+            "properties": {
+              "priority": 1004,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3100"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('vmName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "Premium_LRS"
+            },
+            "diskSizeGB": "[parameters('osDiskSizeGB')]"
+          },
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "20_04-lts",
+            "version": "latest"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[parameters('subnetId')]"
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', 'UbuntuMonitorNSG')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "vmName": {
+      "type": "string",
+      "value": "[parameters('vmName')]"
+    }
+  }
+}
