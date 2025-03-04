@@ -5,7 +5,7 @@ Este repositorio permite desplegar una máquina virtual Ubuntu Server en Azure c
 ## 🚀 **Implementación Automática en Azure**
 Haz clic en el botón de abajo para desplegar automáticamente la infraestructura en Azure:
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FTU-USUARIO%2Fazure-deploy-monitoring%2Fmain%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fcamiloriosjcr%2Fazure-deploy-monitoring%2Fmain%2Fazuredeploy.json)
 
 ## 📌 **Requisitos Previos**
 - Una cuenta en **Microsoft Azure**.
