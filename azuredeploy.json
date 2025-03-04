@@ -118,44 +118,24 @@
       }
     },
     {
-      "type": "Microsoft.Compute/virtualMachines",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-03-01",
-      "name": "[parameters('vmName')]",
+      "name": "[concat(parameters('vmName'), '/installMonitoringSoftware')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[parameters('vmName')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "storageProfile": {
-          "osDisk": {
-            "createOption": "FromImage",
-            "managedDisk": {
-              "storageAccountType": "Premium_LRS"
-            },
-            "diskSizeGB": "[parameters('osDiskSizeGB')]"
-          },
-          "imageReference": {
-            "publisher": "Canonical",
-            "offer": "UbuntuServer",
-            "sku": "20_04-lts",
-            "version": "latest"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[parameters('subnetId')]"
-            }
-          ]
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://raw.githubusercontent.com/camiloriosjcr/azure-deploy-monitoring/main/install_monitoring.sh"
+          ],
+          "commandToExecute": "bash install_monitoring.sh"
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkSecurityGroups', 'UbuntuMonitorNSG')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
       ]
     }
   ],
