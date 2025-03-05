@@ -7,7 +7,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Instalar dependencias
 echo "Instalando dependencias..."
-sudo apt install -y curl wget unzip
+sudo apt install -y curl wget unzip libfontconfig1 musl
 
 # Instalar Prometheus
 echo "Instalando Prometheus..."
@@ -42,7 +42,7 @@ sudo systemctl start prometheus
 # Instalar Grafana
 echo "Instalando Grafana..."
 wget https://dl.grafana.com/oss/release/grafana_10.3.1_amd64.deb
-sudo dpkg -i grafana_10.3.1_amd64.deb
+sudo dpkg -i grafana_10.3.1_amd64.deb || sudo apt-get install -f -y  # Corregir dependencias faltantes
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
 
