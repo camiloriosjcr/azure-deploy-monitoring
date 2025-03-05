@@ -53,28 +53,37 @@
       "metadata": {
         "description": "Nombre de la subred"
       }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "Canonical",
+      "metadata": {
+        "description": "Proveedor de la imagen de la VM"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "UbuntuServer",
+      "metadata": {
+        "description": "Oferta de la imagen de la VM"
+      }
+    },
+    "imageSku": {
+      "type": "string",
+      "defaultValue": "20_04-lts",
+      "metadata": {
+        "description": "SKU de la imagen de la VM"
+      }
+    },
+    "imageVersion": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Versión de la imagen de la VM"
+      }
     }
   },
   "resources": [
-    {
-      "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2021-05-01",
-      "name": "[parameters('networkName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": ["10.0.0.0/16"]
-        },
-        "subnets": [
-          {
-            "name": "[parameters('subnetName')]",
-            "properties": {
-              "addressPrefix": "10.0.0.0/24"
-            }
-          }
-        ]
-      }
-    },
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2021-03-01",
@@ -98,81 +107,12 @@
             "diskSizeGB": "[parameters('osDiskSizeGB')]"
           },
           "imageReference": {
-            "publisher": "Canonical",
-            "offer": "0001-com-ubuntu-server-focal",
-            "sku": "20_04-lts",
-            "version": "latest"
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('imageSku')]",
+            "version": "[parameters('imageVersion')]"
           }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'), '-nic'))]"
-            }
-          ]
         }
-      }
-    },
-    {
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2021-05-01",
-      "name": "UbuntuMonitorNSG",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "securityRules": [
-          {
-            "name": "AllowSSH",
-            "properties": {
-              "priority": 1001,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "22"
-            }
-          },
-          {
-            "name": "AllowGrafana",
-            "properties": {
-              "priority": 1002,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "3000"
-            }
-          },
-          {
-            "name": "AllowPrometheus",
-            "properties": {
-              "priority": 1003,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "9090"
-            }
-          },
-          {
-            "name": "AllowLoki",
-            "properties": {
-              "priority": 1004,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "3100"
-            }
-          }
-        ]
       }
     }
   ],
