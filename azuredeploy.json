@@ -54,35 +54,16 @@
         "description": "Nombre de la subred"
       }
     },
-    "imagePublisher": {
-      "type": "string",
-      "defaultValue": "Canonical",
-      "allowedValues": ["Canonical", "OpenLogic", "MicrosoftWindowsServer"],
+    "imageReference": {
+      "type": "object",
+      "defaultValue": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "20_04-lts",
+        "version": "latest"
+      },
       "metadata": {
-        "description": "Proveedor de la imagen de la VM"
-      }
-    },
-    "imageOffer": {
-      "type": "string",
-      "defaultValue": "0001-com-ubuntu-server-focal",
-      "allowedValues": ["0001-com-ubuntu-server-focal", "UbuntuServer", "CentOS"],
-      "metadata": {
-        "description": "Oferta de la imagen de la VM"
-      }
-    },
-    "imageSku": {
-      "type": "string",
-      "defaultValue": "20_04-lts",
-      "allowedValues": ["18_04-lts", "20_04-lts", "22_04-lts"],
-      "metadata": {
-        "description": "SKU de la imagen de la VM"
-      }
-    },
-    "imageVersion": {
-      "type": "string",
-      "defaultValue": "latest",
-      "metadata": {
-        "description": "Versión de la imagen de la VM"
+        "description": "Referencia de la imagen de la VM"
       }
     }
   },
@@ -109,12 +90,7 @@
             },
             "diskSizeGB": "[parameters('osDiskSizeGB')]"
           },
-          "imageReference": {
-            "publisher": "[parameters('imagePublisher')]",
-            "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "[parameters('imageVersion')]"
-          }
+          "imageReference": "[parameters('imageReference')]"
         }
       }
     }
