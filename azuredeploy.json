@@ -68,11 +68,16 @@
         "description": "Oferta de la imagen de la VM"
       }
     },
-    "imageSku": {
+    "ubuntuVersion": {
       "type": "string",
-      "defaultValue": "20_04-lts",
+      "defaultValue": "20.04-LTS",
+      "allowedValues": [
+        "18.04-LTS",
+        "20.04-LTS",
+        "22.04-LTS"
+      ],
       "metadata": {
-        "description": "SKU de la imagen de la VM"
+        "description": "Versión de Ubuntu Server"
       }
     },
     "imageVersion": {
@@ -109,7 +114,7 @@
           "imageReference": {
             "publisher": "[parameters('imagePublisher')]",
             "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
+            "sku": "[parameters('ubuntuVersion')]",
             "version": "[parameters('imageVersion')]"
           }
         }
