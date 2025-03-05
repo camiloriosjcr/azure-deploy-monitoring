@@ -40,21 +40,41 @@
         "description": "Tamaño del disco del sistema operativo"
       }
     },
-    "networkInterfaceName": {
+    "networkName": {
       "type": "string",
-      "defaultValue": "ubuntuMonitorNIC",
+      "defaultValue": "UbuntuMonitorVNet",
       "metadata": {
-        "description": "Nombre de la interfaz de red"
+        "description": "Nombre de la red virtual"
       }
     },
-    "subnetId": {
+    "subnetName": {
       "type": "string",
+      "defaultValue": "UbuntuMonitorSubnet",
       "metadata": {
-        "description": "ID de la subred donde se desplegará la VM"
+        "description": "Nombre de la subred"
       }
     }
   },
   "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('networkName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": ["10.0.0.0/16"]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('subnetName')]",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          }
+        ]
+      }
+    },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2021-05-01",
