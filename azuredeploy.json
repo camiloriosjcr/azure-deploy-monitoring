@@ -53,42 +53,71 @@
       "metadata": {
         "description": "Nombre de la subred"
       }
-    },
-    "imagePublisher": {
-      "type": "string",
-      "defaultValue": "Canonical",
-      "metadata": {
-        "description": "Publisher de la imagen de la VM"
-      }
-    },
-    "imageOffer": {
-      "type": "string",
-      "defaultValue": "UbuntuServer",
-      "metadata": {
-        "description": "Oferta de la imagen de la VM"
-      }
-    },
-    "ubuntuVersion": {
-      "type": "string",
-      "defaultValue": "20.04-LTS",
-      "allowedValues": [
-        "18.04-LTS",
-        "20.04-LTS",
-        "22.04-LTS"
-      ],
-      "metadata": {
-        "description": "Versión de Ubuntu Server"
-      }
-    },
-    "imageVersion": {
-      "type": "string",
-      "defaultValue": "latest",
-      "metadata": {
-        "description": "Versión de la imagen de la VM"
-      }
     }
   },
   "resources": [
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2021-05-01",
+      "name": "UbuntuMonitorNSG",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowSSH",
+            "properties": {
+              "priority": 1001,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
+            }
+          },
+          {
+            "name": "AllowGrafana",
+            "properties": {
+              "priority": 1002,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3000"
+            }
+          },
+          {
+            "name": "AllowPrometheus",
+            "properties": {
+              "priority": 1003,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "9090"
+            }
+          },
+          {
+            "name": "AllowLoki",
+            "properties": {
+              "priority": 1004,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3100"
+            }
+          }
+        ]
+      }
+    },
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2021-03-01",
@@ -112,10 +141,10 @@
             "diskSizeGB": "[parameters('osDiskSizeGB')]"
           },
           "imageReference": {
-            "publisher": "[parameters('imagePublisher')]",
-            "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('ubuntuVersion')]",
-            "version": "[parameters('imageVersion')]"
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "latest",
+            "version": "latest"
           }
         }
       }
