@@ -41,7 +41,7 @@
     },
     "dnsLabelPrefix": {
       "type": "string",
-      "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
+      "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
@@ -319,6 +319,22 @@
       ]
     },
     {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "WaitForOSReady",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": []
+        }
+      }
+    },
+    {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2023-09-01",
       "name": "[concat(parameters('vmName'), '/installMonitoringSoftware')]",
@@ -336,7 +352,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        "[resourceId('Microsoft.Resources/deployments', 'WaitForOSReady')]"
       ]
     }
   ],
