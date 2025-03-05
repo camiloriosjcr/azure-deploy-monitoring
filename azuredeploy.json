@@ -57,13 +57,15 @@
     "imagePublisher": {
       "type": "string",
       "defaultValue": "Canonical",
+      "allowedValues": ["Canonical", "OpenLogic", "MicrosoftWindowsServer"],
       "metadata": {
         "description": "Proveedor de la imagen de la VM"
       }
     },
     "imageOffer": {
       "type": "string",
-      "defaultValue": "UbuntuServer",
+      "defaultValue": "0001-com-ubuntu-server-focal",
+      "allowedValues": ["0001-com-ubuntu-server-focal", "UbuntuServer", "CentOS"],
       "metadata": {
         "description": "Oferta de la imagen de la VM"
       }
@@ -71,6 +73,7 @@
     "imageSku": {
       "type": "string",
       "defaultValue": "20_04-lts",
+      "allowedValues": ["18_04-lts", "20_04-lts", "22_04-lts"],
       "metadata": {
         "description": "SKU de la imagen de la VM"
       }
