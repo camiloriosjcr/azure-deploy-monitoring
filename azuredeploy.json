@@ -54,16 +54,32 @@
         "description": "Nombre de la subred"
       }
     },
-    "imageReference": {
-      "type": "object",
-      "defaultValue": {
-        "publisher": "Canonical",
-        "offer": "UbuntuServer",
-        "sku": "20_04-lts",
-        "version": "latest"
-      },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "Canonical",
       "metadata": {
-        "description": "Referencia de la imagen de la VM"
+        "description": "Publisher de la imagen de la VM"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "UbuntuServer",
+      "metadata": {
+        "description": "Oferta de la imagen de la VM"
+      }
+    },
+    "imageSku": {
+      "type": "string",
+      "defaultValue": "20_04-lts",
+      "metadata": {
+        "description": "SKU de la imagen de la VM"
+      }
+    },
+    "imageVersion": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Versión de la imagen de la VM"
       }
     }
   },
@@ -90,7 +106,30 @@
             },
             "diskSizeGB": "[parameters('osDiskSizeGB')]"
           },
-          "imageReference": "[parameters('imageReference')]"
+          "imageReference": {
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('imageSku')]",
+            "version": "[parameters('imageVersion')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "name": "[concat(parameters('vmName'), '/installMonitoringSoftware')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://raw.githubusercontent.com/camiloriosjcr/azure-deploy-monitoring/main/install_monitoring.sh"
+          ],
+          "commandToExecute": "bash install_monitoring.sh"
         }
       }
     }
