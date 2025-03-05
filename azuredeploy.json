@@ -4,21 +4,15 @@
   "parameters": {
     "vmName": {
       "type": "string",
-      "defaultValue": "UbuntuMonitorVM",
+      "defaultValue": "simpleLinuxVM",
       "metadata": {
-        "description": "Nombre de la máquina virtual"
+        "description": "The name of your Virtual Machine."
       }
     },
     "adminUsername": {
       "type": "string",
       "metadata": {
-        "description": "Nombre de usuario administrador de la VM"
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Contraseña para el usuario administrador"
+        "description": "Username for the Virtual Machine."
       }
     },
     "adminPasswordOrKey": {
@@ -27,55 +21,19 @@
         "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
       }
     },
-    "dnsLabelPrefix": {
-      "type": "string",
-      "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
-    },
     "ubuntuOSVersion": {
       "type": "string",
       "defaultValue": "Ubuntu-2004",
-      "allowedValues": [
-        "Ubuntu-2004",
-        "Ubuntu-2204"
-      ],
+      "allowedValues": ["Ubuntu-2004", "Ubuntu-2204"],
       "metadata": {
-        "description": "Versión de Ubuntu Server"
+        "description": "The Ubuntu version for the VM."
       }
     },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_D2s_v3",
-      "allowedValues": [
-        "Standard_B2ms",
-        "Standard_D2s_v3",
-        "Standard_D4s_v3"
-      ],
       "metadata": {
-        "description": "Tamaño de la VM"
-      }
-    },
-    "osDiskSizeGB": {
-      "type": "int",
-      "defaultValue": 30,
-      "metadata": {
-        "description": "Tamaño del disco del sistema operativo"
-      }
-    },
-    "networkName": {
-      "type": "string",
-      "defaultValue": "UbuntuMonitorVNet",
-      "metadata": {
-        "description": "Nombre de la red virtual"
-      }
-    },
-    "subnetName": {
-      "type": "string",
-      "defaultValue": "UbuntuMonitorSubnet",
-      "metadata": {
-        "description": "Nombre de la subred"
+        "description": "The size of the VM."
       }
     }
   },
@@ -96,11 +54,7 @@
         },
         "storageProfile": {
           "osDisk": {
-            "createOption": "FromImage",
-            "managedDisk": {
-              "storageAccountType": "Premium_LRS"
-            },
-            "diskSizeGB": "[parameters('osDiskSizeGB')]"
+            "createOption": "FromImage"
           },
           "imageReference": {
             "publisher": "Canonical",
@@ -136,58 +90,10 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
-          {
-            "name": "AllowSSH",
-            "properties": {
-              "priority": 1001,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "22"
-            }
-          },
-          {
-            "name": "AllowGrafana",
-            "properties": {
-              "priority": 1002,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "3000"
-            }
-          },
-          {
-            "name": "AllowPrometheus",
-            "properties": {
-              "priority": 1003,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "9090"
-            }
-          },
-          {
-            "name": "AllowLoki",
-            "properties": {
-              "priority": 1004,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "3100"
-            }
-          }
+          { "name": "AllowSSH", "properties": { "priority": 1001, "protocol": "Tcp", "access": "Allow", "direction": "Inbound", "sourceAddressPrefix": "*", "sourcePortRange": "*", "destinationAddressPrefix": "*", "destinationPortRange": "22" } },
+          { "name": "AllowGrafana", "properties": { "priority": 1002, "protocol": "Tcp", "access": "Allow", "direction": "Inbound", "sourceAddressPrefix": "*", "sourcePortRange": "*", "destinationAddressPrefix": "*", "destinationPortRange": "3000" } },
+          { "name": "AllowPrometheus", "properties": { "priority": 1003, "protocol": "Tcp", "access": "Allow", "direction": "Inbound", "sourceAddressPrefix": "*", "sourcePortRange": "*", "destinationAddressPrefix": "*", "destinationPortRange": "9090" } },
+          { "name": "AllowLoki", "properties": { "priority": 1004, "protocol": "Tcp", "access": "Allow", "direction": "Inbound", "sourceAddressPrefix": "*", "sourcePortRange": "*", "destinationAddressPrefix": "*", "destinationPortRange": "3100" } }
         ]
       }
     }
