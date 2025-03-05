@@ -7,7 +7,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Instalar dependencias
 echo "Instalando dependencias..."
-sudo apt install -y curl wget unzip libfontconfig1 musl jq
+sudo apt install -y curl wget unzip libfontconfig1 musl
 
 # Instalar Prometheus (última versión)
 echo "Instalando Prometheus..."
@@ -94,34 +94,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable loki
 sudo systemctl start loki
 
-# Configurar Grafana: Importar dashboard y alertas
-echo "Configurando Grafana..."
-
-# Descargar archivos de configuración desde el repositorio
-DASHBOARD_URL="https://raw.githubusercontent.com/camiloriosjcr/azure-deploy-monitoring/main/MIC-Basic_dasboardServidores.json"
-ALERT_RULES_URL="https://raw.githubusercontent.com/camiloriosjcr/azure-deploy-monitoring/main/MIC_Basic_alert-rules.json"
-
-wget $DASHBOARD_URL -O /tmp/MIC-Basic_dasboardServidores.json
-wget $ALERT_RULES_URL -O /tmp/MIC_Basic_alert-rules.json
-
-# Esperar a que Grafana esté listo
-echo "Esperando a que Grafana esté listo..."
-sleep 30
-
-# Importar dashboard a Grafana
-echo "Importando dashboard a Grafana..."
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -d @/tmp/MIC-Basic_dasboardServidores.json \
-  http://admin:admin@localhost:3000/api/dashboards/db
-
-# Importar reglas de alerta a Prometheus
-echo "Importando reglas de alerta a Prometheus..."
-sudo cp /tmp/MIC_Basic_alert-rules.json /usr/local/prometheus/alert_rules.json
-sudo chown prometheus:prometheus /usr/local/prometheus/alert_rules.json
-
-# Reiniciar Prometheus para aplicar las reglas de alerta
-echo "Reiniciando Prometheus para aplicar las reglas de alerta..."
-sudo systemctl restart prometheus
-
-echo "Instalación y configuración completada. Prometheus, Grafana y Loki están en ejecución."
+echo "Instalación completada. Prometheus, Grafana y Loki están en ejecución."
