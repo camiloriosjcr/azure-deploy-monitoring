@@ -3,10 +3,12 @@ Este repositorio permite desplegar una máquina virtual Ubuntu Server en Azure c
 
 📌 ¿Qué es Grafana, Prometheus y Loki?
 🔹 Grafana 📊 → Es una plataforma de visualización y análisis de datos en tiempo real. Permite crear dashboards personalizados y visualizar métricas provenientes de múltiples fuentes, incluyendo Prometheus.
+
 🔹 Prometheus 📡 → Es un sistema de monitoreo y alertas diseñado para recopilar métricas de aplicaciones y servidores. Utiliza una base de datos de series temporales optimizada para la observabilidad.
+
 🔹 Loki 📜 → Es una solución de gestión y análisis de logs desarrollada por Grafana Labs. Permite centralizar y consultar logs de sistemas sin necesidad de indexarlos, reduciendo el consumo de recursos.
 
-¿Qué hace este despliegue?
+🚀 ¿Qué hace este despliegue?
 ✅ Crea automáticamente una máquina virtual Ubuntu Server en Azure.
 ✅ Instala y configura Grafana, Prometheus y Loki automáticamente.
 ✅ Abre los puertos necesarios para acceder a los servicios desde Internet:
@@ -15,7 +17,6 @@ SSH (22) → Para la administración remota.
 Grafana (3000) → Para la interfaz web de visualización.
 Prometheus (9090) → Para la recolección de métricas.
 Loki (3100) → Para la gestión de logs.
-
 🛠 ¿Cómo desplegarlo en Azure?
 1️⃣ Haz clic en el botón "Deploy to Azure".
 2️⃣ Sigue los pasos en el portal de Azure para seleccionar los parámetros de la VM.
