@@ -94,7 +94,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable loki
 sudo systemctl start loki
 
-# Configurar Grafana: Importar dashboard y alertas
+# Configurar Grafana: Importar dashboard, alertas y agregar datasources
 echo "Configurando Grafana..."
 
 # Descargar archivos de configuración desde el repositorio
@@ -107,6 +107,66 @@ wget $ALERT_RULES_URL -O /tmp/MIC_Basic_alert-rules.json
 # Esperar a que Grafana esté listo
 echo "Esperando a que Grafana esté listo..."
 sleep 30
+
+# Agregar datasources a Grafana
+echo "Agregando datasources a Grafana..."
+
+# Datasource de Prometheus
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Prometheus",
+    "type": "prometheus",
+    "url": "http://localhost:9090",
+    "access": "proxy",
+    "basicAuth": false
+  }' \
+  http://admin:admin@localhost:3000/api/datasources
+
+# Datasource de Loki
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Loki",
+    "type": "loki",
+    "url": "http://localhost:3100",
+    "access": "proxy",
+    "basicAuth": false
+  }' \
+  http://admin:admin@localhost:3000/api/datasources
+
+# Datasource de Elasticsearch (requiere configuración adicional)
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Elasticsearch",
+    "type": "elasticsearch",
+    "url": "http://localhost:9200",
+    "access": "proxy",
+    "basicAuth": false,
+    "database": "[index-pattern]"
+  }' \
+  http://admin:admin@localhost:3000/api/datasources
+
+# Datasource de Microsoft Azure Monitor (requiere configuración adicional)
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Azure Monitor",
+    "type": "grafana-azure-monitor-datasource",
+    "url": "https://management.azure.com",
+    "access": "proxy",
+    "basicAuth": false,
+    "jsonData": {
+      "subscriptionId": "[SUBSCRIPTION_ID]",
+      "tenantId": "[TENANT_ID]",
+      "clientId": "[CLIENT_ID]"
+    },
+    "secureJsonData": {
+      "clientSecret": "[CLIENT_SECRET]"
+    }
+  }' \
+  http://admin:admin@localhost:3000/api/datasources
 
 # Importar dashboard a Grafana
 echo "Importando dashboard a Grafana..."
