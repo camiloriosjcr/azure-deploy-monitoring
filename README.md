@@ -3,9 +3,7 @@ Este repositorio permite desplegar una máquina virtual Ubuntu Server en Azure c
 
 📌 ¿Qué es Grafana, Prometheus y Loki?
 🔹 Grafana 📊 → Es una plataforma de visualización y análisis de datos en tiempo real. Permite crear dashboards personalizados y visualizar métricas provenientes de múltiples fuentes, incluyendo Prometheus.
-
 🔹 Prometheus 📡 → Es un sistema de monitoreo y alertas diseñado para recopilar métricas de aplicaciones y servidores. Utiliza una base de datos de series temporales optimizada para la observabilidad.
-
 🔹 Loki 📜 → Es una solución de gestión y análisis de logs desarrollada por Grafana Labs. Permite centralizar y consultar logs de sistemas sin necesidad de indexarlos, reduciendo el consumo de recursos.
 
 ¿Qué hace este despliegue?
